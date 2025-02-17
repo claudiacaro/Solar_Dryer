@@ -1,0 +1,216 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador IoT Secador Solar Térmico BIOT UN</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilo básico para centrar el título y los logos */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            max-width: 100px; /* Ajusta según el tamaño deseado de tus logos */
+            margin: 0 10px; /* Espacio entre logos */
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .display {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap; /* Permite que se ajuste en pantallas más pequeñas */
+            margin-bottom: 20px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Dos columnas de igual ancho */
+            grid-gap: 20px; /* Espacio entre las columnas */
+            margin-bottom: 20px;
+        }
+        .box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            flex: 1;
+            margin: 0 10px; /* Espacio entre cajas */
+        }
+        .sensor-box {
+            text-align: center;
+        }
+        canvas {
+            width: 100%; /* Asegura que los gráficos se ajusten a su contenedor */
+        }
+        input[type="number"] {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    
+    <script src="script.js"></script>
+    <!-- Header con título y logos -->
+    <div class="header">
+        <img src="c:/xampp/htdocs/Logo_BIOT.png" alt="Logo_BIOT">
+        <img src="c:/xampp/htdocs/Logo_ASOMEFRUT.jpg" alt="Logo_ASOMEFRUT">
+        <img src="/xampp/htdocs/logo_aproavi.png" alt="Logo_minciencias">
+        <img src="c:/xampp/htdocs/Logo_UN.jpg" alt="logo_un">
+        <img src="/xampp/htdocs/Logo_minciencias.png" alt="Logo_minciencias">
+        <h1>Sistema de control y monitoreo del sistema de secado solar térmico con IoT -  Orquídea 1 </h1>
+        
+    </div>
+    <!-- Controls -->
+<div class="controls">
+    <button id="startButton">Iniciar</button>
+    <button id="stopButton">Detener</button>
+    <button id="stopButton">Descargar datos</button>
+    <div class="display" id="statusDisplay">Estado: Parado</div>
+    <label for="refConstant">Guardar datos </label>
+    <div class="toggle-switch">
+        <input type="checkbox" id="switch" class="switch-checkbox">
+        <label for="refConstant">Local </label>
+        <label for="switch" class="switch-label">
+            <span class="switch-inner"></span>
+            <span class="switch-switch"></span>
+        </label>
+    </div>
+    <div class="toggle-switch">
+        <input type="checkbox" id="switch" class="switch-checkbox">
+        <label for="refConstant">Remoto </label>
+        <label for="switch" class="switch-label">
+            <span class="switch-inner"></span>
+            <span class="switch-switch"></span>
+        </label>
+    </div>
+    <div class="toggle-switch">
+        <input type="checkbox" id="switch" class="switch-checkbox">
+        <label for="refConstant">No </label>
+        <label for="switch" class="switch-label">
+            <span class="switch-inner"></span>
+            <span class="switch-switch"></span>
+        </label>
+    </div>
+    
+    <!-- Constante de referencia -->
+    <label for="refConstant">Velocidad de referencia [m/s]:</label>
+    <input type="number" id="refConstant" step="0.1">
+    <button id="setConstant">Establecer</button>
+</div>
+<!-- Displays numéricos -->
+<!-- Columna 1: Displays numéricos -->
+<div style="position: relative;">
+  
+    <!--  Ajusta las posiciones según donde estén los sensores en tu imagen -->
+   
+  
+  
+    <div class="box">
+    <div class="sensor-box">
+        <h3>Sensor 6</h3>
+        <p>Wind Speed: <span id="tempDisplay1">--</span>m/s  </span>   </p>
+    </div>
+    
+
+<!-- Columna 2: Gráficos -->
+
+    <!-- Canvas para los gráficos -->
+    <canvas id="tempChart" style="max-width: 800px; margin: 0 auto;"></canvas>
+    <canvas id="humidityChart" style="max-width: 800px; margin: 0 auto;"></canvas>
+    
+
+
+
+
+
+    <script>
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            // Remover la clase 'active' de todos los botones y paneles de pestañas
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+
+            // Añadir la clase 'active' al botón y al panel de pestaña correspondiente
+            const target = e.target.getAttribute('data-target');
+            e.target.classList.add('active');
+            document.querySelector(target).classList.add('active');
+        });
+    });
+});
+        // Aquí irán los scripts JavaScript
+// Datos de ejemplo, estos vendrían del ESP32
+var tempData = {
+    sensor1: [23.5, 24.0, 23.8], // Temperaturas de sensor 1
+    sensor2: [22.0, 22.5, 22.7]  // Temperaturas de sensor 2
+};
+
+var humidityData = {
+    sensor1: [45, 46, 47], // Humedad de sensor 1
+    sensor2: [50, 51, 52]  // Humedad de sensor 2
+};
+
+// Configuración para el gráfico de temperatura
+var ctxTemp = document.getElementById('tempChart').getContext('2d');
+var tempChart = new Chart(ctxTemp, {
+    type: 'line',
+    data: {
+        labels: ['Tiempo 1', 'Tiempo 2', 'Tiempo 3'], // Puedes ajustar esto a timestamps
+        datasets: [{
+            label: 'Wind Speeds',
+            data: tempData.sensor1,
+            borderColor: 'red',
+            fill: false
+        }]
+    },
+    options: {
+        responsive: true,
+        title: {
+            display: true,
+            text: 'Wind Speed'
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// Configuración para el gráfico de humedad
+
+
+// Aquí puedes añadir lógica para actualizar los datos en tiempo real
+// Por ejemplo:
+function updateData() {
+    // Asumiendo que tienes una forma de recibir nuevos datos del ESP32
+    // tempData.sensor1.push(nuevaTemperatura1);
+    // tempData.sensor2.push(nuevaTemperatura2);
+    // humidityData.sensor1.push(nuevaHumedad1);
+    // humidityData.sensor2.push(nuevaHumedad2);
+    
+    // Actualiza los gráficos
+    tempChart.update();
+    humidityChart.update();
+}
+
+// Actualiza cada 5 segundos o según necesites
+setInterval(updateData, 5000);
+    </script>
+</body>
+</html>
