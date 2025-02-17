@@ -1,0 +1,196 @@
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador IoT Secador Solar Térmico BIOT UN</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilo básico para centrar el título y los logos */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            max-width: 100px; /* Ajusta según el tamaño deseado de tus logos */
+            margin: 0 10px; /* Espacio entre logos */
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .display {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap; /* Permite que se ajuste en pantallas más pequeñas */
+            margin-bottom: 20px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Dos columnas de igual ancho */
+            grid-gap: 20px; /* Espacio entre las columnas */
+            margin-bottom: 20px;
+        }
+        .box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            flex: 1;
+            margin: 0 10px; /* Espacio entre cajas */
+        }
+        .sensor-box {
+            text-align: center;
+        }
+        canvas {
+            width: 100%; /* Asegura que los gráficos se ajusten a su contenedor */
+        }
+        input[type="number"] {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    
+    <script src="script.js"></script>
+    <!-- Header con título y logos -->
+    <div class="header">
+        <img src="c:/xampp/htdocs/Logo_BIOT.png" alt="Logo_BIOT">
+        <img src="c:/xampp/htdocs/Logo_ASOMEFRUT.jpg" alt="Logo_ASOMEFRUT">
+        <img src="/xampp/htdocs/logo_aproavi.png" alt="Logo_minciencias">
+        <img src="c:/xampp/htdocs/Logo_UN.jpg" alt="logo_un">
+        <img src="/xampp/htdocs/Logo_minciencias.png" alt="Logo_minciencias">
+        <h1>Sistema de control y monitoreo del sistema de secado solar térmico con IoT -  Orquídea 1 </h1>
+        
+    </div>
+<!-- Displays numéricos -->
+<!-- Columna 1: Displays numéricos -->
+<div style="position: relative;">
+    <img src="c:/xampp/htdocs/sistema_de_secado.png" alt="Diagrama P&ID">
+    <div style="position: absolute; top: 340px; left: 340px; width: 20px; height: 20px; background-color: blueviolet;"></div>
+    <div style="position: absolute; top: 340px; left: 370px; width: 20px; height: 20px; background-color: greenyellow;"></div>
+    <div style="position: absolute; top: 440px; left: 260px; width: 20px; height: 20px; background-color: blueviolet;"></div>
+    <div style="position: absolute; top: 440px; left: 290px; width: 20px; height: 20px; background-color: greenyellow;"></div>
+    <div style="position: absolute; top: 350px; left: 510px; width: 20px; height: 20px; background-color: blueviolet;"></div>
+    <div style="position: absolute; top: 350px; left: 540px; width: 20px; height: 20px; background-color: red;"></div>
+    <div style="position: absolute; top: 350px; left: 50px; width: 20px; height: 20px; background-color: red;"></div>
+    <div style="position: absolute; top: 350px; left: 20px; width: 20px; height: 20px; background-color: blueviolet;"></div>
+    <div style="position: absolute; top: 440px; left: 720px; width: 20px; height: 20px; background-color: blueviolet;"></div>
+    <div style="position: absolute; top: 440px; left: 750px; width: 20px; height: 20px; background-color: greenyellow;"></div>
+    <div style="position: absolute; top: 330px; left: 780px; width: 20px; height: 20px; background-color: blueviolet;"></div>
+    <div style="position: absolute; top: 330px; left: 810px; width: 20px; height: 20px; background-color: red;"></div>
+    <div style="position: absolute; top: 340px; left: 980px; width: 20px; height: 20px; background-color: greenyellow;"></div>
+    <div style="position: absolute; top: 340px; left: 950px; width: 20px; height: 20px; background-color: blueviolet;"></div>
+    <div style="position: absolute; top: 100px; left: 780px; width: 20px; height: 20px; background-color: greenyellow;"></div>
+    <div style="position: absolute; top: 100px; left: 750px; width: 20px; height: 20px; background-color: blueviolet;"></div>
+    <div style="position: absolute; top: 260px; left:  0px; background-color: white; border: 1px solid black; padding: 1px;">Temperature 1: 50°C</div>
+    <div style="position: absolute; top: 300px; left:  0px; background-color: white; border: 1px solid black; padding: px;">Humidity 1: 35%</div>
+    <div style="position: absolute; top: 260px; left:  310px; background-color: white; border: 1px solid black; padding: 1px;">Temperature 2: 50°C</div>
+    <div style="position: absolute; top: 300px; left:  310px; background-color: white; border: 1px solid black; padding: 1px;">Humidity 2: 35%</div>
+    <div style="position: absolute; top: 470px; left:  210px; background-color: white; border: 1px solid black; padding: 1px;">Fan Speed 1: 3000 RPM</div>
+    <div style="position: absolute; top: 260px; left:  500px; background-color: white; border: 1px solid black; padding: 1px;">Temperature 3: 50°C</div>
+    <div style="position: absolute; top: 300px; left:  500px; background-color: white; border: 1px solid black; padding: 1px;">Humidity 3: 35%</div>
+    <div style="position: absolute; top: 470px; left:  610px; background-color: white; border: 1px solid black; padding: 1px;">Wind Speed : 1.5 m/s</div>
+    <div style="position: absolute; top: 260px; left:  760px; background-color: white; border: 1px solid black; padding: 1px;">Temperature 4: 50°C</div>
+    <div style="position: absolute; top: 300px; left:  760px; background-color: white; border: 1px solid black; padding: 1px;">Humidity 4: 35%</div>
+    <div style="position: absolute; top: 260px; left:  950px; background-color: white; border: 1px solid black; padding: 1px;">Temperature 5: 50°C</div>
+    <div style="position: absolute; top: 300px; left:  950px; background-color: white; border: 1px solid black; padding: 1px;">Humidity 5: 35%</div>
+    
+    <!--  Ajusta las posiciones según donde estén los sensores en tu imagen -->
+    <div class="tabs">
+        <nav class="tabs">
+            <a href="c:/xampp/htdocs/sensor1.html" class="tab-btn">Real-time Sensor 1</a>
+            <a href="c:/xampp/htdocs/sensor2.html" class="tab-btn">Real-time Sensor 2</a>
+            <a href="c:/xampp/htdocs/sensor3.html" class="tab-btn">Real-time Sensor 3</a>
+            <a href="c:/xampp/htdocs/sensor4.html" class="tab-btn">Real-time Sensor 4</a>
+            <a href="c:/xampp/htdocs/sensor5.html" class="tab-btn">Real-time Sensor 5</a>
+            <a href="c:/xampp/htdocs/sensor6.html" class="tab-btn">Real-time Sensor 6</a>
+            <a href="c:/xampp/htdocs/controller.html" class="tab-btn">Real-time Controller </a>
+        </nav>
+        
+        </div>
+    </div>
+  </div>
+  
+   
+
+
+    
+<!-- Controls -->
+<div class="controls">
+    <button id="startButton">Iniciar</button>
+    <button id="stopButton">Detener</button>
+    <div class="display" id="statusDisplay">Estado: Parado</div>
+    
+    <!-- Constante de referencia -->
+    <label for="refConstant">Temperatura de Referencia [°C]:</label>
+    <input type="number" id="refConstant" step="0.1">
+    <button id="setConstant">Establecer</button>
+
+    <label for="refConstant">Tiempo de secado [min]:</label>
+    <input type="number" id="refConstant" step="0.1">
+    <button id="setConstant">Establecer</button>
+</div>
+
+
+
+
+    <script>
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            // Remover la clase 'active' de todos los botones y paneles de pestañas
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+
+            // Añadir la clase 'active' al botón y al panel de pestaña correspondiente
+            const target = e.target.getAttribute('data-target');
+            e.target.classList.add('active');
+            document.querySelector(target).classList.add('active');
+        });
+    });
+});
+        // Aquí irán los scripts JavaScript
+// Datos de ejemplo, estos vendrían del ESP32
+var tempData = {
+    sensor1: [23.5, 24.0, 23.8], // Temperaturas de sensor 1
+    sensor2: [22.0, 22.5, 22.7]  // Temperaturas de sensor 2
+};
+
+var humidityData = {
+    sensor1: [45, 46, 47], // Humedad de sensor 1
+    sensor2: [50, 51, 52]  // Humedad de sensor 2
+};
+
+
+
+
+
+// Aquí puedes añadir lógica para actualizar los datos en tiempo real
+// Por ejemplo:
+function updateData() {
+    // Asumiendo que tienes una forma de recibir nuevos datos del ESP32
+    // tempData.sensor1.push(nuevaTemperatura1);
+    // tempData.sensor2.push(nuevaTemperatura2);
+    // humidityData.sensor1.push(nuevaHumedad1);
+    // humidityData.sensor2.push(nuevaHumedad2);
+    
+    // Actualiza los gráficos
+    tempChart.update();
+    humidityChart.update();
+}
+
+// Actualiza cada 5 segundos o según necesites
+setInterval(updateData, 5000);
+    </script>
+</body>
+</html>
